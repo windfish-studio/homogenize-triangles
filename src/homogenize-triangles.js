@@ -4,6 +4,8 @@ module.exports = function homogenizeTriangles (verts, faces, tol) {
     verts = verts.slice(0);
     faces = faces.slice(0);
 
+    const spatialIndex = {};
+
     for(var i = 0; i < faces.length; i += 3) {
         let splitFace = () => {
             const vecs = [0, 1, 2].map(_f => {
@@ -62,6 +64,26 @@ module.exports = function homogenizeTriangles (verts, faces, tol) {
                 return (maxAngle(_oa) < maxAngle(_ob))? -1 : 1;
             });
 
+            const createOrShareVtx = (vtx) => {
+                const points = vtx.toArray();
+                let currentPath = spatialIndex;
+
+                points.forEach((_p, _i) => {
+                    if(_i == (points.length - 1)){
+                        if(currentPath[_p] === undefined){
+                            verts.push(vtx.x, vtx.y, vtx.z);
+                            currentPath[_p] = (verts.length / 3) - 1;
+                        }
+                    }else{
+                        currentPath[_p] = currentPath[_p] || {};
+                    }
+
+                    currentPath = currentPath[_p];
+                });
+
+                return currentPath;
+            };
+
             //create two new vertices
             const newVertsIdx = orderedSegs.map(_o => {
                 const half = _o.deltaVec.clone().multiplyScalar(0.5);
@@ -69,8 +91,7 @@ module.exports = function homogenizeTriangles (verts, faces, tol) {
                 const newVtx = vecs[_o.vecIndices[0]].clone();
                 newVtx.add(half);
 
-                verts.push(newVtx.x, newVtx.y, newVtx.z);
-                return (verts.length / 3) - 1;
+                return createOrShareVtx(newVtx);
 
             });
 
