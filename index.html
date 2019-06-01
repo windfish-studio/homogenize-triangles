@@ -2,14 +2,34 @@
 <head>
     <script src="dist/vendor.js"></script>
     <script src="dist/homogenize-triangles.js"></script>
-
     <style>
         body{
             margin: 0px;
         }
+
+        div {
+            position: fixed;
+            display: block;
+            left: 0px;
+            top: 0px;
+            width: 100px;
+            clear: both;
+        }
     </style>
 </head>
 <body>
-    <script src="dist/demo.js"></script>
+    <div>
+        <select onchange="demo.setGeometry" id="geometry">
+            <option value="sphere">Sphere</option>
+            <option value="plane">Plane</option>
+        </select>
+
+        <select onchange="demo.setTolerance" id="tolerance"></select>
+    </div>
+
 </body>
+
+<footer>
+    <script src="dist/demo.js"></script>
+</footer>
 </html>
