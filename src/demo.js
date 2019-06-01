@@ -65,16 +65,15 @@ class HomogenizeTrianglesDemo {
         while(this.scene.children.length){
             let _o = this.scene.children[0];
             this.scene.remove(_o);
-            //_o.geometry.dispose();
-            //_o.material.dispose();
+            _o.geometry.dispose();
+            _o.material.dispose();
         };
 
         this.buildScene();
     }
 
     buildScene () {
-        const narrowTri = this.buildGeometry();
-
+        const geo = this.buildGeometry();
 
         const createMultiMesh = (geo) => {
             const meshes = [];
@@ -108,15 +107,15 @@ class HomogenizeTrianglesDemo {
             return meshes;
         };
 
-        createMultiMesh(narrowTri).forEach(_t => {
+        createMultiMesh(geo).forEach(_t => {
             _t.position.x = -10;
         });
 
         const dividedTri = new BufferGeometry();
         const res = homogenizeTriangles(
-            narrowTri.vertices.map(_v => {return _v.toArray()}).flat(),
-            narrowTri.faces.map(_f => {return [_f.a, _f.b, _f.c]}).flat(),
-            narrowTri.faces.map(_f => {return _f.normal.toArray() }).flat(),
+            geo.vertices.map(_v => {return _v.toArray()}).flat(),
+            geo.faces.map(_f => {return [_f.a, _f.b, _f.c]}).flat(),
+            geo.faces.map(_f => {return _f.normal.toArray() }).flat(),
             this.tolerance
         );
 
@@ -185,11 +184,12 @@ window.addEventListener('DOMContentLoaded', function () {
     tol_select.addEventListener('change', function (e) {
         window.demo.setTolerance(parseInt(e.target.value));
     });
-    tol_select.value = new String(3);
+    tol_select.value = new String(10);
 
     geo_select.addEventListener('change', function (e) {
         window.demo.setGeometry(e.target.value);
     });
+    geo_select.value = 'sphere';
 
     window.demo = new HomogenizeTrianglesDemo(tol_select.value, geo_select.value);
 });

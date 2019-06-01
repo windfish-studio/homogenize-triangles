@@ -1,4 +1,7 @@
-const {Vector3} = require('three/src/math/Vector3');
+const {Vector3} = require('three');
+const fastRounding = require('./util/fastRounding');
+
+const sigFigs = 5;
 
 module.exports = function homogenizeTriangles (verts, faces, facenormals, tol) {
     verts = verts.slice(0);
@@ -11,7 +14,12 @@ module.exports = function homogenizeTriangles (verts, faces, facenormals, tol) {
         const points = vtx.toArray();
         let currentPath = spatialIndex;
 
-        points.forEach((_p, _i) => {
+        points.forEach((_n, _i) => {
+            let _p = fastRounding(_n, sigFigs);
+            if(_p == -0){
+                _p = 0;
+            }
+
             if(_i == (points.length - 1)){
                 if(currentPath[_p] === undefined){
                     verts.push(vtx.x, vtx.y, vtx.z);
@@ -110,8 +118,8 @@ module.exports = function homogenizeTriangles (verts, faces, facenormals, tol) {
             faces[_fb] = e;
             faces[_fc] = d;
 
-            faces.push(e, b, c);
-            faces.push(d, e, c);
+            faces.push(d, b, c);
+            faces.push(d, e, b);
 
             //copy this facenormal twice (one for each new face)
             [0,1].forEach(() => {

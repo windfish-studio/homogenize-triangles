@@ -7,24 +7,34 @@
             margin: 0px;
         }
 
+        label {
+            color: #ffffff;
+            display: block;
+        }
+
         div {
             position: fixed;
             display: block;
             left: 0px;
             top: 0px;
-            width: 100px;
             clear: both;
         }
     </style>
 </head>
 <body>
     <div>
-        <select onchange="demo.setGeometry" id="geometry">
-            <option value="sphere">Sphere</option>
-            <option value="plane">Plane</option>
-        </select>
+        <label>
+            Geometry:
+            <select onchange="demo.setGeometry" id="geometry">
+                <option value="sphere">Sphere</option>
+                <option value="plane">Plane</option>
+            </select>
+        </label>
 
-        <select onchange="demo.setTolerance" id="tolerance"></select>
+        <label>
+            Max edge length:
+            <select onchange="demo.setTolerance" id="tolerance"></select>
+        </label>
     </div>
 
 </body>
