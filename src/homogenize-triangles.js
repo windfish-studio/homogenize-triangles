@@ -1,12 +1,40 @@
 const {Vector3} = require('three/src/math/Vector3');
 
-module.exports = function homogenizeTriangles (verts, faces, tol) {
+module.exports = function homogenizeTriangles (verts, faces, facenormals, tol) {
     verts = verts.slice(0);
     faces = faces.slice(0);
+    facenormals = facenormals.slice(0);
 
     const spatialIndex = {};
 
+    const createOrShareVtx = (vtx) => {
+        const points = vtx.toArray();
+        let currentPath = spatialIndex;
+
+        points.forEach((_p, _i) => {
+            if(_i == (points.length - 1)){
+                if(currentPath[_p] === undefined){
+                    verts.push(vtx.x, vtx.y, vtx.z);
+                    currentPath[_p] = (verts.length / 3) - 1;
+                }
+            }else{
+                currentPath[_p] = currentPath[_p] || {};
+            }
+
+            currentPath = currentPath[_p];
+        });
+
+        return currentPath;
+    };
+
     for(var i = 0; i < faces.length; i += 3) {
+
+        let faceNormal = new Vector3(
+            facenormals[i],
+            facenormals[i+1],
+            facenormals[i+2]
+        );
+
         let splitFace = () => {
             const vecs = [0, 1, 2].map(_f => {
                 const vertIdx = faces[i + _f] * 3;
@@ -52,37 +80,13 @@ module.exports = function homogenizeTriangles (verts, faces, tol) {
                 });
             });
 
-            //ensure orderedSegs is always in CCW order
-            const maxAngle = (_o) => {
-                Math.max(
-                    vecs[sharedVtx].angleTo(vecs[_o.vecIndices[0]]),
-                    vecs[sharedVtx].angleTo(vecs[_o.vecIndices[1]])
-                );
-            };
-
             orderedSegs = orderedSegs.sort((_oa, _ob) => {
-                return (maxAngle(_oa) < maxAngle(_ob))? -1 : 1;
+
+                const cross = (new Vector3()).crossVectors(_oa.deltaVec, _ob.deltaVec);
+                const ang = cross.angleTo(faceNormal);
+
+                return (ang < (Math.PI/2))? -1 : 1;
             });
-
-            const createOrShareVtx = (vtx) => {
-                const points = vtx.toArray();
-                let currentPath = spatialIndex;
-
-                points.forEach((_p, _i) => {
-                    if(_i == (points.length - 1)){
-                        if(currentPath[_p] === undefined){
-                            verts.push(vtx.x, vtx.y, vtx.z);
-                            currentPath[_p] = (verts.length / 3) - 1;
-                        }
-                    }else{
-                        currentPath[_p] = currentPath[_p] || {};
-                    }
-
-                    currentPath = currentPath[_p];
-                });
-
-                return currentPath;
-            };
 
             //create two new vertices
             const newVertsIdx = orderedSegs.map(_o => {
@@ -109,6 +113,11 @@ module.exports = function homogenizeTriangles (verts, faces, tol) {
             faces.push(e, b, c);
             faces.push(d, e, c);
 
+            //copy this facenormal twice (one for each new face)
+            [0,1].forEach(() => {
+                facenormals.push(faceNormal.x, faceNormal.y, faceNormal.z);
+            });
+
             return splitFace();
         };
 
@@ -117,6 +126,7 @@ module.exports = function homogenizeTriangles (verts, faces, tol) {
 
     return {
         verts: verts,
-        faces: faces
+        faces: faces,
+        facenormals: facenormals
     }
 };

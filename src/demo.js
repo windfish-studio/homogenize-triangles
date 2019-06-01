@@ -47,12 +47,21 @@ class HomogenizeTrianglesDemo {
 
         //construct a narrow triangle
         const narrowTri = new Geometry();
+
+        //Vertical oriented rectangle
         narrowTri.vertices.push(
             new Vector3(-1,5,0),
             new Vector3(-1,-5,0),
             new Vector3(1,-5,0),
             new Vector3(1,5,0)
         );
+
+        // narrowTri.vertices.push(
+        //     new Vector3(-5,1,0),
+        //     new Vector3(-5,-1,0),
+        //     new Vector3(5,-1,0),
+        //     new Vector3(5,1,0)
+        // );
 
         narrowTri.faces.push(
             new Face3(0,1,2),
@@ -83,7 +92,7 @@ class HomogenizeTrianglesDemo {
             meshes.push(mesh);
 
             mesh = new Points(geo, new PointsMaterial({
-                size: 1,
+                size: 0.4,
                 color: 0xffffff
             }));
 
@@ -102,9 +111,10 @@ class HomogenizeTrianglesDemo {
 
         const dividedTri = new BufferGeometry();
         const res = homogenizeTriangles(
-            narrowTri.vertices.map(_v => {return [_v.x, _v.y, _v.z]}).flat(),
+            narrowTri.vertices.map(_v => {return _v.toArray()}).flat(),
             narrowTri.faces.map(_f => {return [_f.a, _f.b, _f.c]}).flat(),
-            6
+            narrowTri.faces.map(_f => {return _f.normal.toArray() }).flat(),
+            2
         );
 
         dividedTri.addAttribute('position', new Float32BufferAttribute(Float32Array.from(res.verts), 3));
