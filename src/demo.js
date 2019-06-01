@@ -44,7 +44,7 @@ class HomogenizeTrianglesDemo {
                 geo.computeBoundingBox();
                 geo.computeFaceNormals();
                 geo.computeVertexNormals();
-                this.perFrameRotation.set(0.001,0.01,0);
+                this.perFrameRotation.set(0.001,0.005,0);
                 break;
         }
 
