@@ -1,6 +1,6 @@
 {
   "name": "@windfish-studio/homogenize-triangles",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "three": "^0.103.0"
   },
