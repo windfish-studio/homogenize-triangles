@@ -1,12 +1,21 @@
 {
   "name": "@windfish-studio/homogenize-triangles",
   "version": "1.0.1",
+  "scripts": {
+    "build": "babel src --out-dir cjs",
+    "prepublish": "npm run build",
+    "install": "npm run build",
+    "test": "ava --tap test/test.js"
+  },
+  "main": "cjs/homogenize-triangles.js",
+  "module": "src/homogenize-triangles.js",
   "dependencies": {
     "three": "^0.103.0"
   },
   "devDependencies": {
     "ava": "^2.0.0",
     "array-flatten": "^2.1.2",
+    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.3",
     "@babel/register": "^7.4.0",
     "@babel/preset-env": "^7.4.3",
