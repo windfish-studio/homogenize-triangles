@@ -1,5 +1,6 @@
 {
   "name": "homogenize-triangles",
+  "version": "0.0.0",
   "dependencies": {
     "three": "^0.103.0"
   },
