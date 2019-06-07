@@ -1,11 +1,11 @@
-#Homogenize Triangles
+# Homogenize Triangles
 This library will sub-divide triangles in a mesh until each edge-length is less than or equal to a user-specified threshold. Use it when you have too few triangles in a mesh and you need to create more. Please see the JSFiddle example: 
 
  https://jsfiddle.net/sikanrong/fua2hny8/
  
  ![Demo Screenshot](https://raw.githubusercontent.com/windfish-studio/homogenize-triangles/master/dist/homogenize-triangles.png)
  
-###Usage
+### Usage
  
  ```javascript
 const homogenizeTriangles = require('@windfish-studio/homogenize-triangles');
@@ -31,7 +31,7 @@ const homogenized = homogenizeTriangles(
 //Each array has the same format as the inputs to the function
 ```
 
-###Tests
+### Tests
 
 ```bash
 npm run test
