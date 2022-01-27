@@ -10,7 +10,7 @@
   "main": "cjs/homogenize-triangles.js",
   "module": "src/homogenize-triangles.js",
   "dependencies": {
-    "three": "^0.103.0"
+    "three": "^0.137.0"
   },
   "devDependencies": {
     "ava": "^2.0.0",
